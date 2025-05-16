@@ -19,7 +19,7 @@ class CalculatorApp(ctk.CTk):
         self.display = ctk.CTkEntry(self, textvariable=self.entry_var, font=("Arial", 24), justify="right", height=60)
         self.display.pack(padx=20, pady=20, fill="x")
 
-        # Button layout
+        # Button layout using grid
         buttons = [
             ["7", "8", "9", "/"],
             ["4", "5", "6", "*"],
@@ -27,12 +27,20 @@ class CalculatorApp(ctk.CTk):
             ["0", "C", "=", "+"]
         ]
 
-        for row_values in buttons:
-            row = ctk.CTkFrame(self)
-            row.pack(expand=True, fill="both", padx=10, pady=5)
-            for val in row_values:
-                btn = ctk.CTkButton(row, text=val, font=("Arial", 18), command=lambda v=val: self.on_button_click(v))
-                btn.pack(side="left", expand=True, fill="both", padx=5, pady=5)
+        button_frame = ctk.CTkFrame(self)
+        button_frame.pack(expand=True, fill="both", padx=10, pady=10)
+
+        for row_idx, row_values in enumerate(buttons):
+            for col_idx, val in enumerate(row_values):
+                btn = ctk.CTkButton(button_frame, text=val, font=("Arial", 18),
+                                    command=lambda v=val: self.on_button_click(v))
+                btn.grid(row=row_idx, column=col_idx, sticky="nsew", padx=5, pady=5)
+
+        # Make grid cells expand evenly
+        for i in range(4):  # 4 columns
+            button_frame.grid_columnconfigure(i, weight=1)
+        for i in range(4):  # 4 rows
+            button_frame.grid_rowconfigure(i, weight=1)
 
     def on_button_click(self, char):
         if char == "=":
